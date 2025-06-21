@@ -1,9 +1,13 @@
 
 import React from 'react';
-import { Shield, Activity, Satellite, Bell } from 'lucide-react';
+import { Shield, Activity, Satellite, Bell, Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
+  const navigate = useNavigate();
+
   return (
     <header className="bg-slate-800/30 backdrop-blur-md border-b border-slate-700/50">
       <div className="container mx-auto px-4 py-4">
@@ -43,6 +47,16 @@ const Header = () => {
                 3 Alerts
               </Badge>
             </div>
+
+            {/* Live View Button */}
+            <Button 
+              onClick={() => navigate('/live-view')}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+              size="sm"
+            >
+              <Eye className="w-4 h-4 mr-2" />
+              Live View
+            </Button>
           </div>
 
           {/* Last Updated */}
