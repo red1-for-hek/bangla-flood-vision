@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Satellite, RefreshCw, Eye } from 'lucide-react';
@@ -93,7 +92,7 @@ const LiveView = () => {
     { name: 'Sherpur', status: 'normal', coordinates: { x: 50, y: 24 }, division: 'Mymensingh' },
   ];
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'normal': return '#10b981';
       case 'warning': return '#f59e0b';
@@ -109,10 +108,11 @@ const LiveView = () => {
     setTimeout(() => setIsRefreshing(false), 2000);
   };
 
-  const statusCounts = bangladeshDistricts.reduce((acc, district) => {
+  // Fix the type issue by properly typing the statusCounts object
+  const statusCounts: Record<string, number> = bangladeshDistricts.reduce((acc, district) => {
     acc[district.status] = (acc[district.status] || 0) + 1;
     return acc;
-  }, {});
+  }, {} as Record<string, number>);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
@@ -172,26 +172,30 @@ const LiveView = () => {
                 </CardHeader>
                 <CardContent className="p-0 h-full">
                   <div className="relative w-full h-full bg-gradient-to-br from-blue-950 to-slate-900 rounded-b-2xl overflow-hidden">
-                    {/* Bangladesh Map Container */}
+                    {/* Accurate Bangladesh Map Container */}
                     <svg
                       className="absolute inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)]"
                       viewBox="0 0 100 100"
                       preserveAspectRatio="xMidYMid meet"
                     >
-                      {/* Bangladesh Outline */}
+                      {/* More accurate Bangladesh Outline */}
                       <path
-                        d="M20,15 L25,12 L35,15 L45,12 L55,15 L65,18 L75,25 L78,35 L75,45 L70,55 L65,65 L60,75 L50,78 L40,75 L30,70 L25,60 L20,50 L18,40 L20,30 L20,15 Z"
+                        d="M22,12 L26,10 L32,12 L40,10 L48,12 L58,14 L68,18 L75,22 L78,28 L80,35 L78,42 L75,48 L72,54 L68,60 L64,66 L58,70 L52,74 L46,76 L40,74 L34,70 L28,64 L24,56 L22,48 L20,40 L20,32 L22,24 L22,12 Z"
                         fill="rgba(30, 41, 59, 0.8)"
                         stroke="rgba(59, 130, 246, 0.5)"
                         strokeWidth="0.5"
                       />
                       
-                      {/* Division Boundaries */}
-                      <g stroke="rgba(59, 130, 246, 0.3)" strokeWidth="0.2" fill="none">
-                        <path d="M30,25 L50,30 L65,25" />
-                        <path d="M25,35 L45,40 L65,35" />
-                        <path d="M20,45 L40,50 L60,45" />
-                        <path d="M25,55 L45,60 L65,55" />
+                      {/* Major Rivers */}
+                      <g stroke="rgba(59, 130, 246, 0.6)" strokeWidth="0.3" fill="none">
+                        {/* Padma River */}
+                        <path d="M32,40 Q42,42 52,44 Q62,46 72,48" />
+                        {/* Jamuna River */}
+                        <path d="M45,20 Q47,30 49,40 Q51,50 53,60" />
+                        {/* Meghna River */}
+                        <path d="M52,44 Q56,50 60,56 Q64,62 68,68" />
+                        {/* Brahmaputra */}
+                        <path d="M48,18 Q52,22 56,26 Q60,30 64,34" />
                       </g>
 
                       {/* District Markers */}
@@ -230,19 +234,19 @@ const LiveView = () => {
                       <div className="space-y-1">
                         <div className="flex items-center space-x-2">
                           <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                          <span className="text-slate-300 text-xs">Normal ({statusCounts.normal || 0})</span>
+                          <span className="text-slate-300 text-xs">Normal ({statusCounts['normal'] || 0})</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                          <span className="text-slate-300 text-xs">Warning ({statusCounts.warning || 0})</span>
+                          <span className="text-slate-300 text-xs">Warning ({statusCounts['warning'] || 0})</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                          <span className="text-slate-300 text-xs">Flood ({statusCounts.flood || 0})</span>
+                          <span className="text-slate-300 text-xs">Flood ({statusCounts['flood'] || 0})</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                          <span className="text-slate-300 text-xs">Severe ({statusCounts.severe || 0})</span>
+                          <span className="text-slate-300 text-xs">Severe ({statusCounts['severe'] || 0})</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
@@ -264,19 +268,19 @@ const LiveView = () => {
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center p-3 bg-slate-700/30 rounded-lg">
-                      <p className="text-2xl font-bold text-green-400">{statusCounts.normal || 0}</p>
+                      <p className="text-2xl font-bold text-green-400">{statusCounts['normal'] || 0}</p>
                       <p className="text-xs text-slate-400">Normal</p>
                     </div>
                     <div className="text-center p-3 bg-slate-700/30 rounded-lg">
-                      <p className="text-2xl font-bold text-yellow-400">{statusCounts.warning || 0}</p>
+                      <p className="text-2xl font-bold text-yellow-400">{statusCounts['warning'] || 0}</p>
                       <p className="text-xs text-slate-400">Warning</p>
                     </div>
                     <div className="text-center p-3 bg-slate-700/30 rounded-lg">
-                      <p className="text-2xl font-bold text-orange-400">{statusCounts.flood || 0}</p>
+                      <p className="text-2xl font-bold text-orange-400">{statusCounts['flood'] || 0}</p>
                       <p className="text-xs text-slate-400">Flood</p>
                     </div>
                     <div className="text-center p-3 bg-slate-700/30 rounded-lg">
-                      <p className="text-2xl font-bold text-red-400">{statusCounts.severe || 0}</p>
+                      <p className="text-2xl font-bold text-red-400">{statusCounts['severe'] || 0}</p>
                       <p className="text-xs text-slate-400">Severe</p>
                     </div>
                   </div>
